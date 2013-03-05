@@ -1,0 +1,407 @@
+
+<html><head><title>4ktris</title>
+<style type="text/css">
+div.abs {
+	position: fixed;
+	z-order: 5;
+	font-family: sans-serif;
+	font-size: 8pt;
+}
+div#d_score {
+	top: 120;
+	left: 420;
+}
+div#d_level {
+	top: 150;
+	left: 420;
+}
+div#d_fps {
+	top: 595;
+	left: 10;
+}
+div#d_over {
+	top: 400;
+	left: 420;
+}
+</style>
+</head>
+<body onload="worker.init();" onkeydown="worker.key_pressed(event)">
+<div style="width: 0; height: 0; overflow: hidden"><canvas id="buffer" width="550" height="605" style="visibility:hidden"></canvas></div>
+<div style="width: 0; height: 0; overflow: hidden"><canvas id="oB" width="850" height="605" style="visibility:hidden"></canvas></div>
+<canvas id="main" width="550" height="605"></canvas><br>
+<div class="abs" id="d_score">Score:<span id="score"></span></div>
+<div class="abs" id="d_level">Level:<span id="level"></span></div>
+<div class="abs" id="d_fps">FPS:<span id="fps"></span></div>
+<div class="abs" id="d_over">
+<b>Game Over</b><br><br>
+Press SPACE to start<br><br>
+PgUp/DN adjust Level
+</div>
+</body>
+<script type="text/javascript">
+BOX_SIZE = 25;
+FIELD_WIDTH = 11;
+FIELD_HEIGHT = 20;
+FIELD_SHIFT = 40;
+TIMER_DELAY = 20;
+
+WINDOW_WIDTH = FIELD_WIDTH*BOX_SIZE * 2;
+WINDOW_HEIGHT = FIELD_HEIGHT*BOX_SIZE + 105;
+
+I = [
+	//T
+	-1, 0, 0, 1, 0, 0, 0, -1,
+	0, 1, -1, 0, 0, 0, 1, 0,
+	0, 1, 0, 0, 0, -1, 1, 0,
+	-1, 0, 0, 0, 1, 0, 0, -1,
+	//--__
+	-1, 0, -1, -1, 0, 1, 0, 0,
+	-1, 0, 0, 0, 0, -1, 1, -1,
+	-1, 0, -1, -1, 0, 1, 0, 0,
+	-1, 0, 0, 0, 0, -1, 1, -1,
+	//__--
+	-1, 1, -1, 0, 0, 0, 0, -1, 
+	0, 0, 1, 0, -1, -1, 0, -1,
+	-1, 1, -1, 0, 0, 0, 0, -1, 
+	0, 0, 1, 0, -1, -1, 0, -1,
+	// !L
+	-1,-1, 0, 1, 0, 0, 0, -1,
+	-1, 1, -1, 0, 0, 0, 1, 0,
+	0, 1, 0, 0, 0, -1, 1, 1,
+	-1, 0, 0, 0, 1, 0, 1, -1,
+	// L
+	-1, 1, -1, 0, -1, -1, 0, -1,
+	-2, 0, -1, 0, 0, 0, -2, -1,
+	-2, 1, -1, 1, -1, 0, -1, -1,
+	0, 1, -2, 0, -1, 0, 0, 0,
+	//line
+	0, 2, 0, 1, 0, 0, 0, -1,
+	-1, 1, 0, 1, 1, 1, 2, 1,
+	0, 2, 0, 1, 0, 0, 0, -1,
+	-1, 1, 0, 1, 1, 1, 2, 1,
+	//Square
+	-1, 0, 0, 0, -1, -1, 0, -1,
+	-1, 0, 0, 0, -1, -1, 0, -1,
+	-1, 0, 0, 0, -1, -1, 0, -1,
+	-1, 0, 0, 0, -1, -1, 0, -1
+];
+C = [
+	"#000000;", "#B40000;", "#00B400;", "#0000B4;",
+	"#B4B400;", "#00B4B4;", "#B4B4B4;", "#B400B4;",
+	"#A7D8E1;", "#B4E1B3;", "#536C70;"
+];
+
+function arraycopy(src, src_from, dest, dest_from, len) {
+	for (var i = 0;i<len;i++) {
+		dest[dest_from+i] = src[src_from+i];
+	}
+}
+
+worker = {
+	init: function() {
+		worker.e_score = document.getElementById("score");
+		worker.e_level = document.getElementById("level");
+		worker.e_fps = document.getElementById("fps");
+		worker.e_over = document.getElementById("d_over");
+		worker.main_canvas = document.getElementById("main").getContext('2d');
+		worker.buffer = document.getElementById("buffer");
+		worker.ctx = worker.buffer.getContext('2d');
+		worker.oB = null;
+		worker.iter_freq = 20;
+
+		worker.fps_start = (new Date()).getTime();
+		worker.fps_counter = 0;
+		worker.ips_counter = 0;
+		worker.fps = 0;
+		worker.ips = 0;
+
+		/** Field of I that have been layed down. */
+		worker.F = new Array(FIELD_WIDTH*(FIELD_HEIGHT+5));
+
+		/** Base x and y coordinates of the item currently falling. */
+		worker.x = worker.y = 0;
+		/** The St of item's "rotation". */
+		worker.St = 0;
+		/** Item's index multiplied by 32. */
+		worker.item = 0;
+		/** Current L = 26-L. */
+		worker.L = 1;
+		/** Current score. */
+		worker.SC = 0;
+		/** Rows rm. */
+		worker.rm = 0;
+		/** Next item to go. */
+		worker.N = 0;
+		/** Still PL or game over? */
+		worker.PL = 0;
+		/** User pressed down arrow. */
+		worker.fD = 0;
+		/** Starting level. */
+		worker.sLv = 25;
+
+		worker.c = 0;
+		worker.sub = 0;
+		worker.bY = 0;
+		worker.bD = 0;
+
+		worker.restart();
+		setInterval(worker.do_round, 10);
+	},
+	restart: function() {
+		for (var i = 0;i<FIELD_WIDTH*(FIELD_HEIGHT+5); i++) {
+			worker.F[i] = 0;
+		}
+		worker.x = Math.floor(FIELD_WIDTH/2);
+		worker.y = FIELD_HEIGHT;
+		worker.item = worker.N;
+		worker.N = Math.floor(Math.random()*7)*32;
+		worker.fD = 0;
+		worker.St = 0;
+		worker.SC = 0;
+		worker.rm = 0;
+		worker.L = worker.sLv;
+		worker.PL = 1;
+		worker.e_over.style.visibility = "hidden";
+	},
+	tP: function(x, y, St) {
+		St+= worker.item;
+ 		for (var i = 0;i<4;i++) {
+			var x1 = x + I[St++];
+			var y1 = y + I[St++];
+			if (x1<0 || x1>=FIELD_WIDTH) {
+				return false;
+			}
+			if (y1<0) {
+				return false;
+			}
+			if (0!=worker.F[x1 + y1*FIELD_WIDTH]) {
+				return false;
+			}
+		}
+		return true;
+	},
+	iter: function(tm) {
+		worker.ips_counter++;
+
+		if(!worker.PL) {
+			return ;
+		}
+
+		if (0!=(++worker.c % worker.L) && !worker.fD) {
+			var ssub = Math.floor(BOX_SIZE*worker.c/worker.L) - BOX_SIZE;
+			if (0==ssub) {
+				ssub = -25;
+			}
+			worker.sub = ssub;
+		} else {
+			if (worker.tP(worker.x, worker.y-1, worker.St)) {
+				worker.y--;
+				if (worker.fD && worker.tP(worker.x, worker.y-1, worker.St)) {
+					worker.y--;
+				}
+			} else {
+				//drop
+				worker.pS = true;
+				var start = worker.item + worker.St;
+				for (var i = start;i<start+8;i+= 2) {
+					worker.F[(worker.x + I[i]) + (worker.y + I[i+1])*FIELD_WIDTH] = worker.item/32+1;
+				}
+				for (var j = 0;j<FIELD_HEIGHT;j++) {
+					var continue_outer = 0;
+					for (var i = 0;i<FIELD_WIDTH;i++) {
+						if (0==worker.F[j*FIELD_WIDTH + i]) {
+							continue_outer = 1;
+							break;
+						}
+					}
+					if (!continue_outer) {
+						start = j*FIELD_WIDTH;
+						arraycopy(worker.F, start + FIELD_WIDTH, worker.F, start, FIELD_HEIGHT*FIELD_WIDTH-FIELD_WIDTH-start);
+
+						worker.rm++;
+						worker.SC+= 26-worker.L;
+						if (0==worker.rm%10 && worker.L>1) {
+							worker.L--;
+						}
+						j--;
+					}
+				}
+
+				worker.x = Math.floor(FIELD_WIDTH/2);
+				worker.y = FIELD_HEIGHT;
+				worker.item = worker.N;
+				worker.N = Math.floor(Math.random()*7)*32;
+				worker.St = 0;
+				worker.fD = 0;
+				worker.bD = (worker.N%5)-2;
+
+				if(!worker.tP(worker.x, worker.y, worker.St)) {
+					worker.PL = 0;
+					worker.e_over.style.visibility = "visible";
+				}
+			}
+			worker.c = 0;
+			worker.sub = -25;
+		}
+	},
+	key_pressed: function(ev) {
+		switch (ev.keyCode) {
+		case 37:
+			if (worker.tP(worker.x-1, worker.y, worker.St)) {
+				worker.x--;
+			}
+			break;
+		case 39:
+			if (worker.tP(worker.x+1, worker.y, worker.St)) {
+				worker.x++;
+			}
+			break;
+		case 38:
+			{
+				var temp = (worker.St+8)%32;
+				if (worker.tP(worker.x, worker.y, temp)) {
+					worker.St = temp;
+				}
+			}
+			break;
+		case 40:
+			worker.fD = true;
+			break;
+		}
+		if (worker.PL) {
+			worker.draw(null);
+			return ;
+		}
+		switch (ev.keyCode) {
+		case 32:
+			worker.restart();
+			break;
+		case 33:
+			if(worker.sLv>1) {
+				worker.L = --worker.sLv;
+			}
+			break;
+		case 34:
+			if(worker.sLv<25) {
+				worker.L = ++worker.sLv;
+			}
+			break;
+		}
+		worker.draw(null);
+	},
+	do_round: function() {
+		var tm = (new Date()).getTime();
+		for (var i = 0;i<20;i++) {
+			if (worker.ips_counter && (tm-worker.fps_start)/worker.ips_counter<=worker.iter_freq) {
+				break;
+			}
+			worker.iter(tm);
+		}
+		worker.draw(tm);
+	},
+	draw: function(tm) {
+		if (null==worker.oB) {
+			worker.oB = document.getElementById("oB");
+			var ctx = worker.oB.getContext('2d');
+
+			ctx.fillStyle = C[8];
+			ctx.fillRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+			
+			ctx.fillStyle = C[10];
+			ctx.fillRect(FIELD_SHIFT + 10, FIELD_SHIFT + 10, BOX_SIZE*FIELD_WIDTH+3, BOX_SIZE*FIELD_HEIGHT+3);
+			ctx.fillRect(FIELD_WIDTH*BOX_SIZE + 130, BOX_SIZE*4 + 10, 90, 70);
+			ctx.fillRect(FIELD_WIDTH*BOX_SIZE + 130, BOX_SIZE*8 + 10, 90, BOX_SIZE*6);
+
+			ctx.fillStyle = "#000";
+			ctx.fillRect(FIELD_WIDTH*BOX_SIZE + 119, BOX_SIZE*4-1, 92, 72);
+			ctx.fillRect(FIELD_WIDTH*BOX_SIZE + 119, BOX_SIZE*8-1, 92, BOX_SIZE*6 + 2);
+			ctx.fillRect(FIELD_SHIFT - 3, FIELD_SHIFT - 3, BOX_SIZE*FIELD_WIDTH+5, BOX_SIZE*FIELD_HEIGHT+5);
+
+			ctx.fillStyle = C[9];
+			ctx.fillRect(FIELD_WIDTH*BOX_SIZE + 121, BOX_SIZE*4+1, 88, 68);
+			ctx.fillRect(FIELD_WIDTH*BOX_SIZE + 121, BOX_SIZE*8+1, 88, BOX_SIZE*6 - 2);
+			ctx.fillRect(FIELD_SHIFT -1 , FIELD_SHIFT - 1, BOX_SIZE*FIELD_WIDTH+1, BOX_SIZE*FIELD_HEIGHT+1);
+
+			ctx.fillRect(WINDOW_WIDTH, 0, FIELD_WIDTH*BOX_SIZE, (FIELD_HEIGHT+2)*BOX_SIZE);
+			for (var i = WINDOW_WIDTH+8; i<WINDOW_WIDTH+FIELD_WIDTH*BOX_SIZE*4; i+= 25) {
+				for (var j = 6; j<(FIELD_HEIGHT+5)*BOX_SIZE; j+= 25) {
+					ctx.strokeStyle = C[2];
+					ctx.strokeRect(i, j, 10, 8);
+					ctx.strokeStyle = C[7];
+					ctx.strokeRect(i+4, j+4, 8, 10);
+				}
+			}
+		}
+		worker.ctx.drawImage(worker.oB, 0, 0);
+
+		worker.bY = (worker.bY + worker.bD + 50) % 50;
+
+		worker.ctx.save();
+		worker.ctx.beginPath();
+		worker.ctx.moveTo(FIELD_SHIFT, FIELD_SHIFT);
+		worker.ctx.lineTo(FIELD_SHIFT, FIELD_SHIFT+BOX_SIZE*FIELD_HEIGHT);
+		worker.ctx.lineTo(FIELD_SHIFT+BOX_SIZE*FIELD_WIDTH, FIELD_SHIFT+BOX_SIZE*FIELD_HEIGHT);
+		worker.ctx.lineTo(FIELD_SHIFT+BOX_SIZE*FIELD_WIDTH, FIELD_SHIFT);
+		worker.ctx.clip();
+		worker.ctx.drawImage(worker.oB, FIELD_SHIFT-WINDOW_WIDTH, Math.floor(worker.bY/2))
+
+		var start = worker.item + worker.St;
+		for (var i = start;i<start+8;i+= 2) {
+			worker.drawSquare(worker.x+I[i], worker.y+I[i+1], worker.item/32+1, worker.sub);
+		}
+		for (var j = FIELD_HEIGHT-1;j>=0; j--) {
+			for (var i = 0;i<FIELD_WIDTH; i++) {
+				if(0!=worker.F[j*FIELD_WIDTH+i]) {
+					worker.drawSquare(i, j, worker.F[j*FIELD_WIDTH+i], 0);
+				}
+			}
+		}
+		worker.ctx.restore();
+
+		for (var i = worker.N;i<worker.N+8;i+= 2) {
+			worker.drawSquare(FIELD_WIDTH + 5 + I[i], 10 + I[i+1], worker.N/32+1, 0);
+		}
+		worker.main_canvas.drawImage(worker.buffer, 0, 0);
+
+		worker.fps_counter++;
+		if (null!=tm) {
+			if (tm-worker.fps_start>1000) {
+				worker.fps = Math.round(1000*worker.fps_counter/(tm-worker.fps_start));
+				worker.ips = Math.round(1000*worker.ips_counter/(tm-worker.fps_start));
+				worker.fps_start = tm;
+				worker.fps_counter = 0;
+				worker.ips_counter = 0;
+				worker.e_fps.innerHTML = "" + worker.fps + "/" + worker.ips;
+			}
+		}
+		worker.e_level.innerHTML = "" + (26-worker.L);
+		worker.e_score.innerHTML = "" + worker.SC;
+	},
+	drawSquare: function(x, y, color, sub) {
+/*		if (0) {	//slow in ff31
+			worker.ctx.fillStyle = "#000";
+			worker.ctx.shadowOffsetX = 6;
+			worker.ctx.shadowOffsetY = 6;
+			worker.ctx.shadowBlur = 1;
+			worker.ctx.shadowColor = "#000";
+			worker.ctx.fillRect(FIELD_SHIFT + x*BOX_SIZE, FIELD_SHIFT + (FIELD_HEIGHT-1)*BOX_SIZE - y*BOX_SIZE + sub, BOX_SIZE-1, BOX_SIZE-1);
+			worker.ctx.fillStyle = C[color];
+			worker.ctx.fillRect(FIELD_SHIFT + 2 + x*BOX_SIZE, FIELD_SHIFT + 2 + (FIELD_HEIGHT-1)*BOX_SIZE-y*BOX_SIZE + sub, BOX_SIZE-5, BOX_SIZE-5);
+		} else */
+		{
+			worker.ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+			worker.ctx.fillRect(FIELD_SHIFT + 8 + x*BOX_SIZE, FIELD_SHIFT + 8 + (FIELD_HEIGHT-1)*BOX_SIZE-y*BOX_SIZE + sub, BOX_SIZE-1, BOX_SIZE-1);
+			worker.ctx.fillStyle = "#000";
+			worker.ctx.fillRect(FIELD_SHIFT + x*BOX_SIZE, FIELD_SHIFT + (FIELD_HEIGHT-1)*BOX_SIZE - y*BOX_SIZE + sub, BOX_SIZE-1, BOX_SIZE-1);
+			worker.ctx.fillStyle = C[color];
+			worker.ctx.fillRect(FIELD_SHIFT + 2 + x*BOX_SIZE, FIELD_SHIFT + 2 + (FIELD_HEIGHT-1)*BOX_SIZE-y*BOX_SIZE + sub, BOX_SIZE-5, BOX_SIZE-5);
+		}
+	},
+	__x_sentinel__: 0
+}
+</script>
+<div style="position:fixed;bottom:0;right:0;padding:0 1em 0 1em;background-color:#CFF;font-family:sans-serif;display:block;">
+  <a href="http://sites.google.com/site/petrsstuff/projects/4ktris-js">http://sites.google.com/site/petrsstuff/projects/4ktris-js</a>
+</div>
+</html>
+
