@@ -1,4 +1,4 @@
-package fogus.patagonia;
+package fogus.patagonia.doodads;
 
 /*
  * Super Mario Land 4K

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package fogus.patagonia;
+package fogus.patagonia.doodads;
 
 /**
  * @author mfogus

@@ -1,4 +1,4 @@
-package fogus.patagonia;
+package fogus.patagonia.doodads;
 
 import java.awt.Event;
 import java.awt.Color;

@@ -1,4 +1,4 @@
-package fogus.patagonia;
+package fogus.patagonia.doodads;
 
 /*
  * Legend of Zelda 4K

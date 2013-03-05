@@ -1,4 +1,4 @@
-package fogus.patagonia;
+package fogus.patagonia.doodads;
 
 /**
  * Comment free (yay) source code for Left 4k Dead by Markus Persson

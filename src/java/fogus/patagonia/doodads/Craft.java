@@ -1,6 +1,6 @@
 // https://code.google.com/p/4kraft/
 
-package fogus.patagonia;
+package fogus.patagonia.doodads;
 
 import java.applet.Applet;
 import java.awt.Color;

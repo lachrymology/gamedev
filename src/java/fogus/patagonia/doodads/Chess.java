@@ -1,4 +1,4 @@
-package fogus.patagonia;
+package fogus.patagonia.doodads;
 
 /*
  * Copyright (c) 2005-2008 Ulf Ochsenfahrt <ulf@ofahrt.de>
