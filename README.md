@@ -1,4 +1,4 @@
 patagonia
 =========
 
-Koei style games
+experiments with games
