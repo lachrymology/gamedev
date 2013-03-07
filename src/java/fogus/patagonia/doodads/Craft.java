@@ -10,8 +10,11 @@ import java.awt.TexturePaint;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.net.URL;
 import java.util.Random;
 import java.util.Vector;
+import javax.imageio.ImageIO;
 
 @SuppressWarnings("serial")
 public class Craft extends Applet implements Runnable {
@@ -111,8 +114,15 @@ public class Craft extends Applet implements Runnable {
 		// =====================================================================================================================================
 		int i, j, l, p, q, r, s, x, y, x2, y2, m;
 		double theta;
-		int[] unit, unit2, bullet, unitCounts = new int[ UNIT_TYPES * 2 ]; // unitCounts holds how many of each type of units each team has
-		final BufferedImage groundTexture  = new BufferedImage( GROUND_TEXTURE_SIZE, GROUND_TEXTURE_SIZE, BufferedImage.TYPE_INT_RGB );
+		int[] unit, bullet, unitCounts = new int[ UNIT_TYPES * 2 ]; // unitCounts holds how many of each type of units each team has
+		int[] unit2 = new int[ UNIT_TYPES * 2 ];
+		BufferedImage groundTexture;
+		try {
+			URL url = new URL(this.getCodeBase(), "terrain_grass.png");
+			groundTexture = ImageIO.read(url);
+		} catch (IOException e1) {
+			groundTexture = new BufferedImage( GROUND_TEXTURE_SIZE, GROUND_TEXTURE_SIZE, BufferedImage.TYPE_INT_RGB ); 
+		}
 		final BufferedImage buffer         = new BufferedImage( SCREEN_WIDTH, SCREEN_HEIGHT, BufferedImage.TYPE_INT_RGB );
 		final Graphics2D    graphics       = (Graphics2D) buffer.getGraphics();
 		final Graphics2D    appletGraphics = (Graphics2D) getGraphics();
@@ -138,11 +148,6 @@ public class Craft extends Applet implements Runnable {
 					
 					if ( winner >= 0 || iteration < 0 ) {
 						// Init new game
-						// Generate new ground texture
-						for ( i = 0; i < GROUND_TEXTURE_SIZE; i++ )
-							for ( j = 0; j < GROUND_TEXTURE_SIZE; j++ )
-								groundTexture.setRGB( i, j, ( ( 30*256 + 70 + random.nextInt( 50 ) ) << 8 ) + 30 );
-						
 						iteration   = 0;
 						mapX        = 0;
 						mapY        = ( MAP_SIZE - SCREEN_HEIGHT + NAVIGATION_BAR_SIZE ) / 2;
