@@ -55,6 +55,18 @@ import fogus.patagonia.errors.PatagoniaException;
 
 
 public class Client {
+	private static Logger log = Logger.getLogger(Client.class.toString());
+	
+	private String host;
+	private int port;
+	private String path;
+	private Map<String,String> credentials = new HashMap<String,String>();
+	
+	private ConnectingIOReactor ioReactor;
+    private HttpProcessor httpproc;
+    private HttpParams params;
+    private BasicNIOConnPool pool;
+	
 	public static void main(String[] args) {
 	}
 }
