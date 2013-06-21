@@ -67,6 +67,12 @@ public class Client {
     private HttpParams params;
     private BasicNIOConnPool pool;
 	
+    public Client(String host, int port, String path) {
+        this.host = host;
+        this.port = port;
+        this.path = path;
+    }
+    
 	public static void main(String[] args) {
 	}
 }
