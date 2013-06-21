@@ -82,8 +82,13 @@ public class Client {
                 .setParameter(CoreProtocolPNames.USER_AGENT, "DSR");
     }
     
-
-    
-	public static void main(String[] args) {
-	}
+    private void initHTTPProcess() {
+        httpproc = new ImmutableHttpProcessor(new HttpRequestInterceptor[]{
+            new RequestContent(),
+            new RequestTargetHost(),
+            new RequestConnControl(),
+            new RequestUserAgent(),
+            new RequestExpectContinue()
+        });
+    }
 }
