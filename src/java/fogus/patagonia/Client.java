@@ -126,4 +126,16 @@ public class Client {
             }
         });
     }
+    
+    public void init() throws PatagoniaException {
+    	initParams();
+    	initHTTPProcess();
+        initReactor();
+        initPool();
+        buildChannelThread().start();
+    }
+    
+	public static void main(String[] args) {
+	}
+
 }
