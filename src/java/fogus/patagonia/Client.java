@@ -73,6 +73,17 @@ public class Client {
         this.path = path;
     }
     
+    private void initParams() {
+        this.params = new SyncBasicHttpParams();
+        this.params.setIntParameter(CoreConnectionPNames.SO_TIMEOUT, 30000)
+                .setIntParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, 30000)
+                .setIntParameter(CoreConnectionPNames.SOCKET_BUFFER_SIZE, 8 * 1024)
+                .setBooleanParameter(CoreConnectionPNames.TCP_NODELAY, true)
+                .setParameter(CoreProtocolPNames.USER_AGENT, "DSR");
+    }
+    
+
+    
 	public static void main(String[] args) {
 	}
 }
