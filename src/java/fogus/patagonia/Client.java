@@ -109,8 +109,21 @@ public class Client {
         this.pool.setDefaultMaxPerRoute(2);
         this.pool.setMaxTotal(2);
     }
-    
-	public static void main(String[] args) {
-	}
 
+    private Thread buildChannelThread() {
+        final HttpAsyncRequestExecutor protocolHandler = new HttpAsyncRequestExecutor();
+        final IOEventDispatch ioEventDispatch = new DefaultHttpClientIODispatch(protocolHandler, this.params);
+        
+        return new Thread(new Runnable() {
+            public void run() {
+                try {
+                    ioReactor.execute(ioEventDispatch);
+                } catch (InterruptedIOException ex) {
+                    log.severe("Interrupted");
+                } catch (IOException e) {
+                    log.severe("I/O error: " + e.getMessage());
+                }
+            }
+        });
+    }
 }
