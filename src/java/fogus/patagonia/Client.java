@@ -83,7 +83,7 @@ public class Client {
     }
     
     private void initHTTPProcess() {
-        httpproc = new ImmutableHttpProcessor(new HttpRequestInterceptor[]{
+    	this.httpproc = new ImmutableHttpProcessor(new HttpRequestInterceptor[]{
             new RequestContent(),
             new RequestTargetHost(),
             new RequestConnControl(),
@@ -97,11 +97,20 @@ public class Client {
         config.setIoThreadCount(1);
 
         try {
-            ioReactor = new DefaultConnectingIOReactor(config);
+        	this.ioReactor = new DefaultConnectingIOReactor(config);
         } catch (IOReactorException e) {
             log.severe("Error occurred while starting the IO Reactor");
             throw new PatagoniaException(e.getMessage());
         }
     }
-        
+    
+    private void initPool() {
+        this.pool = new BasicNIOConnPool(this.ioReactor, this.params);
+        this.pool.setDefaultMaxPerRoute(2);
+        this.pool.setMaxTotal(2);
+    }
+    
+	public static void main(String[] args) {
+	}
+
 }
