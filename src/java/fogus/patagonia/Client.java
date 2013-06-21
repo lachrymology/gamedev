@@ -91,4 +91,17 @@ public class Client {
             new RequestExpectContinue()
         });
     }
+    
+    private void initReactor() throws PatagoniaException {
+        IOReactorConfig config = new IOReactorConfig();
+        config.setIoThreadCount(1);
+
+        try {
+            ioReactor = new DefaultConnectingIOReactor(config);
+        } catch (IOReactorException e) {
+            log.severe("Error occurred while starting the IO Reactor");
+            throw new PatagoniaException(e.getMessage());
+        }
+    }
+        
 }
