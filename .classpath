@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src/java"/>
-	<classpathentry kind="src" path="src/res"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/httpcore-4.2.4.jar"/>
 	<classpathentry kind="lib" path="lib/httpcore-nio-4.2.4.jar"/>
