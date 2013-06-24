@@ -1,2 +1,4 @@
 bin
 *.class
+pom.xml
+target
