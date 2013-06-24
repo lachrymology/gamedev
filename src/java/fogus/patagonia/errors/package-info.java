@@ -1,1 +1,0 @@
-package fogus.patagonia.errors;

@@ -14,7 +14,7 @@ Copyright 2012 Viktor Klang
    See the License for the specific language governing permissions and
    limitations under the License.
 */
-package fogus.patagonia;
+package patagonia;
 
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;

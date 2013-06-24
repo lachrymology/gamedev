@@ -1,4 +1,4 @@
-package fogus.patagonia;
+package patagonia;
 
 import java.io.InputStream;
 

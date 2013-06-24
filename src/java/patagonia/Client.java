@@ -1,4 +1,4 @@
-package fogus.patagonia;
+package patagonia;
 
 import org.apache.http.Header;
 import org.apache.http.HttpHost;
@@ -33,6 +33,9 @@ import org.apache.http.protocol.RequestExpectContinue;
 import org.apache.http.protocol.RequestTargetHost;
 import org.apache.http.protocol.RequestUserAgent;
 
+import patagonia.callbacks.NoopCallback;
+import patagonia.errors.PatagoniaException;
+
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -49,8 +52,6 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Logger;
 
-import fogus.patagonia.callbacks.NoopCallback;
-import fogus.patagonia.errors.PatagoniaException;
 
 
 public class Client {

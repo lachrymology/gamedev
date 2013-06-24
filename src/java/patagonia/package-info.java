@@ -5,4 +5,4 @@
  * @author mfogus
  *
  */
-package fogus.patagonia;
+package patagonia;

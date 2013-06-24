@@ -1,4 +1,4 @@
-package fogus.patagonia.errors;
+package patagonia.errors;
 
 public class PatagoniaException  extends Exception {
 	private static final long serialVersionUID = -8547403154654596033L;

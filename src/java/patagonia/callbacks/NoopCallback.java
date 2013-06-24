@@ -1,10 +1,11 @@
-package fogus.patagonia.callbacks;
+package patagonia.callbacks;
 
 import java.io.IOException;
 import java.io.InputStream;
 
-import fogus.patagonia.Callback;
-import fogus.patagonia.Util;
+import patagonia.Callback;
+import patagonia.Util;
+
 
 public class NoopCallback implements Callback {
 	public void completed(InputStream is) {
