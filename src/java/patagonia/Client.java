@@ -64,6 +64,7 @@ public class Client {
 	private int port;
 	private String path;
 	private volatile Map<String,String> credentials = new HashMap<String,String>();
+	private volatile UUID channel;
 	
 	private ConnectingIOReactor ioReactor;
     private HttpProcessor httpproc;
@@ -212,5 +213,9 @@ public class Client {
 		}
         
         client.attach();
+	}
+
+	public void setChannel(UUID uuid) {
+		this.channel = uuid;
 	}
 }

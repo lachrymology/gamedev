@@ -2,6 +2,8 @@ package patagonia.callbacks;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
+import java.util.UUID;
 
 import org.apache.http.HttpResponse;
 
@@ -23,9 +25,9 @@ public class AttachmentCallback extends Callback {
     		String str = Util.slurp(inputStream);
 			Parseable pbr = Parsers.newParseable(str);
 			Parser p = Parsers.newParser(Parsers.defaultConfiguration());
-			Object thing = p.nextValue(pbr);
+			List uuids = (List) p.nextValue(pbr);
 			
-			System.out.println("GOT: " + thing.getClass().getName());
+			this.client.setChannel((UUID) uuids.get(0));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
