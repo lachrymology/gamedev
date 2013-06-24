@@ -8,9 +8,14 @@ import org.apache.http.HttpResponse;
 
 
 public class LoginCallback extends Callback {
+	private String name;
+	private String email;
     private Map<String, String> credentials;
 	
-	public LoginCallback(final Map<String, String> credentials) {
+	public LoginCallback(String name, String email, final Map<String, String> credentials) {
+		// TODO stringer checks here
+		this.name = name;
+		this.email = email;
         this.credentials = credentials;
 	}
 
@@ -21,6 +26,9 @@ public class LoginCallback extends Callback {
 
 			//TODO stronger checks here
 			this.credentials.put(val[0], val[1]);
-		}		
+		}
+		
+		this.credentials.put("name",  this.name);
+		this.credentials.put("email", this.email);
 	}
 }

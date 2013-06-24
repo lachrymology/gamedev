@@ -178,7 +178,7 @@ public class Client {
             
             InputStream body = new ByteArrayInputStream(msg.getBytes());
  
-            this.sendTo(endpoint, body, new LoginCallback(this.credentials));
+            this.sendTo(endpoint, body, new LoginCallback(name, email, this.credentials));
         } catch (Exception e) {
             log.severe("Error occurred");
             e.printStackTrace();
@@ -188,8 +188,8 @@ public class Client {
     public void send(String topic, Map<String,Object>... parameters) {
     }
     
-    public UUID attach() {
-    	return null;
+    public void attach() {
+		this.sendTo("hi", this.credentials.get("name"), new AttachmentCallback(this));
 	}
     
 	public static void main(String[] args) {
