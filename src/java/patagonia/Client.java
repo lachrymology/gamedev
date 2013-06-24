@@ -33,6 +33,8 @@ import org.apache.http.protocol.RequestExpectContinue;
 import org.apache.http.protocol.RequestTargetHost;
 import org.apache.http.protocol.RequestUserAgent;
 
+import patagonia.callbacks.Callback;
+import patagonia.callbacks.LoginCallback;
 import patagonia.callbacks.NoopCallback;
 import patagonia.errors.PatagoniaException;
 
@@ -176,7 +178,7 @@ public class Client {
             
             InputStream body = new ByteArrayInputStream(msg.getBytes());
  
-            this.send(endpoint, body, new NoopCallback());
+            this.send(endpoint, body, new LoginCallback(this.credentials));
         } catch (Exception e) {
             log.severe("Error occurred");
             e.printStackTrace();

@@ -3,7 +3,8 @@ package patagonia.callbacks;
 import java.io.IOException;
 import java.io.InputStream;
 
-import patagonia.Callback;
+import org.apache.http.HttpResponse;
+
 import patagonia.Util;
 
 
@@ -24,4 +25,13 @@ public class NoopCallback implements Callback {
 	public void cancelled() {
 		System.out.println("Cancelled the request");
     }
+
+	@Override
+	public void completed(HttpResponse response) {
+		try {
+			this.completed(response.getEntity().getContent());
+		} catch (IllegalStateException | IOException e) {
+			e.printStackTrace();
+		}
+	}
 }
