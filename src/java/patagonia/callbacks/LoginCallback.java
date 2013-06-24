@@ -20,15 +20,7 @@ public class LoginCallback extends Callback {
 			String[] val = header.getValue().split("=");
 
 			//TODO stronger checks here
-			credentials.put(val[0], val[1]);
+			this.credentials.put(val[0], val[1]);
 		}		
-	}
-
-	@Override
-	public void failed(Exception e) {
-	}
-
-	@Override
-	public void cancelled() {
 	}
 }
