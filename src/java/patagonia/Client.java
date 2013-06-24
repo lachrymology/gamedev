@@ -136,7 +136,7 @@ public class Client {
         buildChannelThread().start();
     }
     
-    private void send(String endpoint, final InputStream inputStream, final Callback callBack) {
+    private void sendTo(String endpoint, final InputStream inputStream, final Callback callBack) {
     	DefaultConnectionReuseStrategy strategy = new DefaultConnectionReuseStrategy();   //
     	HttpAsyncRequester requester = new HttpAsyncRequester(this.httpproc, strategy, this.params);
     	
@@ -174,12 +174,18 @@ public class Client {
             
             InputStream body = new ByteArrayInputStream(msg.getBytes());
  
-            this.send(endpoint, body, new LoginCallback(this.credentials));
+            this.sendTo(endpoint, body, new LoginCallback(this.credentials));
         } catch (Exception e) {
             log.severe("Error occurred");
             e.printStackTrace();
         }
     }
+    
+    public void send(String topic, Map<String,Object>... parameters) {
+    	
+    }
+    
+    
     
 	public static void main(String[] args) {
 		Client client = new Client("localhost", 8080, "/");
