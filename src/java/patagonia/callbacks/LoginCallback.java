@@ -6,6 +6,8 @@ import java.util.Map;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 
+import patagonia.Util;
+
 
 public class LoginCallback extends Callback {
 	private String name;
@@ -22,7 +24,7 @@ public class LoginCallback extends Callback {
 	@Override
 	public void completed(HttpResponse response) {
 		for (Header header : response.getHeaders("Set-Cookie")) {
-			String[] val = header.getValue().split("=");
+			String[] val = Util.parseCookie(header);
 
 			//TODO stronger checks here
 			this.credentials.put(val[0], val[1]);
