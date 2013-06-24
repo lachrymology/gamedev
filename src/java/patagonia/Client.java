@@ -62,7 +62,7 @@ public class Client {
 	private String host;
 	private int port;
 	private String path;
-	private Map<String,String> credentials = new HashMap<String,String>();
+	private volatile Map<String,String> credentials = new HashMap<String,String>();
 	
 	private ConnectingIOReactor ioReactor;
     private HttpProcessor httpproc;
@@ -189,7 +189,7 @@ public class Client {
     }
     
     public void attach() {
-		this.sendTo("hi", this.credentials.get("name"), new AttachmentCallback(this));
+		this.sendTo("hi", this.credentials.get("name"), new NoopCallback());
 	}
     
 	public static void main(String[] args) {
@@ -203,9 +203,11 @@ public class Client {
         client.login("fogus", "mfogus@d-a-s.com");
         
         try {
-			Thread.sleep(50000);
+			Thread.sleep(5000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+        
+        client.attach();
 	}
 }
