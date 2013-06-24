@@ -144,11 +144,7 @@ public class Client {
         
         BasicHttpEntityEnclosingRequest request = new BasicHttpEntityEnclosingRequest(method, path + endpoint);
         request.setEntity(new InputStreamEntity(inputStream, -1));
-        
-        if (this.credentials.get("session-id") != null) {
-        	String cook = Util.pickleCookies(this.credentials);
-        	request.setHeader("Cookie", cook);
-        }
+        Util.cookieDecoration(this.credentials, request);
         
         requester.execute(
                 new BasicAsyncRequestProducer(target, request),

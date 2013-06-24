@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.util.Map;
 
 import org.apache.http.Header;
+import org.apache.http.HttpRequest;
 
 public class Util {
 	public static String slurp(InputStream in) throws IOException {
@@ -26,10 +27,17 @@ public class Util {
 	public static String[] parseCookie(Header cook) {
 		return cook.getValue().split("=");
 	}
-	
+
 	public static String pickleCookies(Map<String,String> credentials) {
 		// TODO: More robustness please
 		return "session-id="  + credentials.get("session-id") + ";" +
 			   "session-key=" + credentials.get("session-key");
+	}
+	
+	public static void cookieDecoration(Map<String,String> credentials, HttpRequest request) {
+        if (credentials.get("session-id") != null) {
+        	String cook = Util.pickleCookies(credentials);
+        	request.setHeader("Cookie", cook);
+        }
 	} 
 }
