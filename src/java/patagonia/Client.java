@@ -136,13 +136,13 @@ public class Client {
         buildChannelThread().start();
     }
     
-    private void sendTo(String endpoint, final InputStream inputStream, final Callback callBack) {
+    private void sendTo(String endpoint, String method, final InputStream inputStream, final Callback callBack) {
     	DefaultConnectionReuseStrategy strategy = new DefaultConnectionReuseStrategy();   //
     	HttpAsyncRequester requester = new HttpAsyncRequester(this.httpproc, strategy, this.params);
     	
         final HttpHost target = new HttpHost(host, port, "http");   //
         
-        BasicHttpEntityEnclosingRequest request = new BasicHttpEntityEnclosingRequest("POST", path + endpoint);
+        BasicHttpEntityEnclosingRequest request = new BasicHttpEntityEnclosingRequest(method, path + endpoint);
         request.setEntity(new InputStreamEntity(inputStream, -1));
         
         requester.execute(
@@ -163,8 +163,8 @@ public class Client {
                 });
     }
 
-    private void sendTo(String endpoint, String message, final Callback callBack) {
-    	sendTo(endpoint, new ByteArrayInputStream(message.getBytes()), callBack);
+    private void sendTo(String endpoint, String method, String message, final Callback callBack) {
+    	sendTo(endpoint, method, new ByteArrayInputStream(message.getBytes()), callBack);
     }
     
     public void destroy() throws IOException {
@@ -178,7 +178,7 @@ public class Client {
             
             InputStream body = new ByteArrayInputStream(msg.getBytes());
  
-            this.sendTo(endpoint, body, new LoginCallback(name, email, this.credentials));
+            this.sendTo(endpoint, "POST", body, new LoginCallback(name, email, this.credentials));
         } catch (Exception e) {
             log.severe("Error occurred");
             e.printStackTrace();
@@ -189,7 +189,7 @@ public class Client {
     }
     
     public void attach() {
-		this.sendTo("hi", this.credentials.get("name"), new NoopCallback());
+		this.sendTo("hi", "GET", this.credentials.get("name"), new NoopCallback());
 	}
     
 	public static void main(String[] args) {
