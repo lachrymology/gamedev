@@ -33,6 +33,7 @@ import org.apache.http.protocol.RequestExpectContinue;
 import org.apache.http.protocol.RequestTargetHost;
 import org.apache.http.protocol.RequestUserAgent;
 
+import patagonia.callbacks.AttachmentCallback;
 import patagonia.callbacks.Callback;
 import patagonia.callbacks.LoginCallback;
 import patagonia.callbacks.NoopCallback;
@@ -191,7 +192,7 @@ public class Client {
     
     public void attach() {
         Util.pickleCookies(this.credentials);
-		this.sendTo("hi", "GET", this.credentials.get("name"), new NoopCallback());
+		this.sendTo("hi", "GET", this.credentials.get("name"), new AttachmentCallback(this));
 	}
     
 	public static void main(String[] args) {
