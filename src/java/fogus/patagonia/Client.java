@@ -51,6 +51,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Logger;
 
+import fogus.patagonia.callbacks.NoopCallback;
 import fogus.patagonia.errors.PatagoniaException;
 
 
@@ -99,7 +100,6 @@ public class Client {
         try {
         	this.ioReactor = new DefaultConnectingIOReactor(config);
         } catch (IOReactorException e) {
-            log.severe("Error occurred while starting the IO Reactor");
             throw new PatagoniaException(e.getMessage());
         }
     }
@@ -135,13 +135,13 @@ public class Client {
         buildChannelThread().start();
     }
     
-    private void send(final InputStream inputStream, final Callback callBack) {
+    private void send(String endpoint, final InputStream inputStream, final Callback callBack) {
     	DefaultConnectionReuseStrategy strategy = new DefaultConnectionReuseStrategy();   //
     	HttpAsyncRequester requester = new HttpAsyncRequester(this.httpproc, strategy, this.params);
     	
         final HttpHost target = new HttpHost(host, port, "http");   //
         
-        BasicHttpEntityEnclosingRequest request = new BasicHttpEntityEnclosingRequest("POST", path);
+        BasicHttpEntityEnclosingRequest request = new BasicHttpEntityEnclosingRequest("POST", path + endpoint);
         request.setEntity(new InputStreamEntity(inputStream, -1));
         
         requester.execute(
@@ -171,7 +171,17 @@ public class Client {
     }
     
     public void login(String name, String email) {
-    	
+        try {
+            String msg = "";
+            String endpoint = "login?name=" + name + "&email=" + email;
+            
+            InputStream body = new ByteArrayInputStream(msg.getBytes());
+ 
+            this.send(endpoint, body, new NoopCallback());
+        } catch (Exception e) {
+            log.severe("Error occurred");
+            e.printStackTrace();
+        }
     }
     
 	public static void main(String[] args) {
