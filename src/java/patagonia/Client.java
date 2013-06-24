@@ -162,6 +162,10 @@ public class Client {
                     }
                 });
     }
+
+    private void sendTo(String endpoint, String message, final Callback callBack) {
+    	sendTo(endpoint, new ByteArrayInputStream(message.getBytes()), callBack);
+    }
     
     public void destroy() throws IOException {
     	ioReactor.shutdown();
@@ -182,10 +186,11 @@ public class Client {
     }
     
     public void send(String topic, Map<String,Object>... parameters) {
-    	
     }
     
-    
+    public UUID attach() {
+    	return null;
+	}
     
 	public static void main(String[] args) {
 		Client client = new Client("localhost", 8080, "/");
