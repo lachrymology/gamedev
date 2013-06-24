@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Map;
 
 import org.apache.http.Header;
 
@@ -25,4 +26,10 @@ public class Util {
 	public static String[] parseCookie(Header cook) {
 		return cook.getValue().split("=");
 	}
+	
+	public static String pickleCookies(Map<String,String> credentials) {
+		// TODO: More robustness please
+		return "session-id="  + credentials.get("session-id") + ";" +
+			   "session-key=" + credentials.get("session-key");
+	} 
 }

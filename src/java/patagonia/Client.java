@@ -145,6 +145,11 @@ public class Client {
         BasicHttpEntityEnclosingRequest request = new BasicHttpEntityEnclosingRequest(method, path + endpoint);
         request.setEntity(new InputStreamEntity(inputStream, -1));
         
+        if (this.credentials.get("session-id") != null) {
+        	String cook = Util.pickleCookies(this.credentials);
+        	request.setHeader("Cookie", cook);
+        }
+        
         requester.execute(
                 new BasicAsyncRequestProducer(target, request),
                 new BasicAsyncResponseConsumer(),
@@ -189,6 +194,7 @@ public class Client {
     }
     
     public void attach() {
+        Util.pickleCookies(this.credentials);
 		this.sendTo("hi", "GET", this.credentials.get("name"), new NoopCallback());
 	}
     
