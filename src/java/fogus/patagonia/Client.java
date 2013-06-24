@@ -135,6 +135,13 @@ public class Client {
         buildChannelThread().start();
     }
     
+    private void send(final InputStream ios, final Callback cb) {
+    	DefaultConnectionReuseStrategy strategy = new DefaultConnectionReuseStrategy();
+    	HttpAsyncRequester requester = new HttpAsyncRequester(this.httpproc, strategy, this.params);
+    	
+        final HttpHost target = new HttpHost(host, port, "http");
+    }
+    
 	public static void main(String[] args) {
 	}
 
