@@ -1,4 +1,3 @@
-// (c) 2012 B Smith-Mannschott -- Distributed under the Eclipse Public License
 package patagonia.edn.util;
 
 import java.util.BitSet;
