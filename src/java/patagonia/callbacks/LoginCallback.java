@@ -7,7 +7,7 @@ import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 
 
-public class LoginCallback implements Callback {
+public class LoginCallback extends Callback {
     private Map<String, String> credentials;
 	
 	public LoginCallback(final Map<String, String> credentials) {
@@ -30,9 +30,5 @@ public class LoginCallback implements Callback {
 
 	@Override
 	public void cancelled() {
-	}
-
-	@Override
-	public void completed(InputStream inputStream) {
 	}
 }

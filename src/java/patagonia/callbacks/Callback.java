@@ -4,9 +4,20 @@ import java.io.InputStream;
 
 import org.apache.http.HttpResponse;
 
-public interface Callback {
-    void completed(InputStream inputStream);
-    void completed(HttpResponse response);
-    void failed(Exception e);
-    void cancelled();
+public abstract class Callback {
+    public void completed(InputStream inputStream) {
+    	throw new UnsupportedOperationException();
+    }
+    
+    public void completed(HttpResponse response) {
+    	throw new UnsupportedOperationException();
+    }
+    
+    public void failed(Exception e) {
+    	throw new UnsupportedOperationException();
+    }
+    
+    public void cancelled() {
+    	throw new UnsupportedOperationException();
+    }
 }

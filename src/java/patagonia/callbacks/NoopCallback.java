@@ -8,7 +8,7 @@ import org.apache.http.HttpResponse;
 import patagonia.Util;
 
 
-public class NoopCallback implements Callback {
+public class NoopCallback extends Callback {
 	public void completed(InputStream is) {
 		try {
 			String body = Util.slurp(is);
@@ -17,14 +17,6 @@ public class NoopCallback implements Callback {
 			this.failed(ioe);
 		}
 	}
- 
-	public void failed(Exception e) {
-		System.out.println("Failed to send the message");
-    }
- 
-	public void cancelled() {
-		System.out.println("Cancelled the request");
-    }
 
 	@Override
 	public void completed(HttpResponse response) {
@@ -34,4 +26,12 @@ public class NoopCallback implements Callback {
 			e.printStackTrace();
 		}
 	}
+	
+	public void failed(Exception e) {
+		System.out.println("Failed to send the message");
+    }
+ 
+	public void cancelled() {
+		System.out.println("Cancelled the request");
+    }
 }
