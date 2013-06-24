@@ -152,11 +152,7 @@ public class Client {
                 new BasicHttpContext(),
                 new FutureCallback<HttpResponse>() {
                     public void completed(final HttpResponse response) {
-                        try {
-							callBack.completed(response.getEntity().getContent());
-						} catch (IllegalStateException | IOException e) {
-							e.printStackTrace();
-						}
+                    	callBack.completed(response);
                     }
                     public void failed(final Exception ex) {
                         callBack.failed(ex);
@@ -186,7 +182,7 @@ public class Client {
     }
     
 	public static void main(String[] args) {
-		Client client = new Client("localhost", 5050, "/");
+		Client client = new Client("localhost", 8080, "/");
         try {
 			client.init();
 		} catch (PatagoniaException e) {
