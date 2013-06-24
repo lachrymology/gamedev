@@ -170,7 +170,24 @@ public class Client {
     	ioReactor.shutdown();
     }
     
+    public void login(String name, String email) {
+    	
+    }
+    
 	public static void main(String[] args) {
+		Client client = new Client("localhost", 5050, "/");
+        try {
+			client.init();
+		} catch (PatagoniaException e) {
+			e.printStackTrace();
+		}
+        
+        client.login("fogus", "mfogus@d-a-s.com");
+        
+        try {
+			Thread.sleep(50000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
-
 }
