@@ -166,6 +166,10 @@ public class Client {
                 });
     }
     
+    public void destroy() throws IOException {
+    	ioReactor.shutdown();
+    }
+    
 	public static void main(String[] args) {
 	}
 
