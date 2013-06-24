@@ -106,8 +106,8 @@ public class Client {
     
     private void initPool() {
         this.pool = new BasicNIOConnPool(this.ioReactor, this.params);
-        this.pool.setDefaultMaxPerRoute(2);
-        this.pool.setMaxTotal(2);
+        this.pool.setDefaultMaxPerRoute(2);    //
+        this.pool.setMaxTotal(2);              //
     }
 
     private Thread buildChannelThread() {
@@ -135,11 +135,35 @@ public class Client {
         buildChannelThread().start();
     }
     
-    private void send(final InputStream ios, final Callback cb) {
-    	DefaultConnectionReuseStrategy strategy = new DefaultConnectionReuseStrategy();
+    private void send(final InputStream inputStream, final Callback callBack) {
+    	DefaultConnectionReuseStrategy strategy = new DefaultConnectionReuseStrategy();   //
     	HttpAsyncRequester requester = new HttpAsyncRequester(this.httpproc, strategy, this.params);
     	
-        final HttpHost target = new HttpHost(host, port, "http");
+        final HttpHost target = new HttpHost(host, port, "http");   //
+        
+        BasicHttpEntityEnclosingRequest request = new BasicHttpEntityEnclosingRequest("POST", path);
+        request.setEntity(new InputStreamEntity(inputStream, -1));
+        
+        requester.execute(
+                new BasicAsyncRequestProducer(target, request),
+                new BasicAsyncResponseConsumer(),
+                pool,
+                new BasicHttpContext(),
+                new FutureCallback<HttpResponse>() {
+                    public void completed(final HttpResponse response) {
+                        try {
+							callBack.completed(response.getEntity().getContent());
+						} catch (IllegalStateException | IOException e) {
+							e.printStackTrace();
+						}
+                    }
+                    public void failed(final Exception ex) {
+                        callBack.failed(ex);
+                    }
+                    public void cancelled() {
+                        callBack.cancelled();
+                    }
+                });
     }
     
 	public static void main(String[] args) {
