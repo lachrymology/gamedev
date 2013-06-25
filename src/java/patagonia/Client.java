@@ -170,10 +170,10 @@ public class Client {
     
     public void login(String name, String email) {
         try {
-            String endpoint = "http://" + this.host + ":" + this.port + "/login?name=" + name + "&email=" + email;
+            String url = LoginProcess.url("http", this.host, this.port, "login?name=" + name + "&email=" + email);
             
             HttpClient httpclient = new DefaultHttpClient();
-            HttpPost post = new HttpPost(endpoint);
+            HttpPost post = new HttpPost(url);
             HttpResponse resp = httpclient.execute(post);
             LoginProcess loginProc = new LoginProcess(name, email, this);
             loginProc.completed(resp);

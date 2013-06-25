@@ -12,6 +12,10 @@ public class LoginProcess extends Callback {
 	private String name;
 	private String email;
     private Client client;
+    
+    public static String url(String proto, String host, int port, String endpoint) {
+    	return proto + "://" + host + ":" + port + "/" + endpoint;
+    }
 	
 	public LoginProcess(String name, String email, final Client client) {
 		// TODO stronger checks here
