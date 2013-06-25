@@ -1,7 +1,5 @@
 package patagonia.callbacks;
 
-import java.util.Map;
-
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 
