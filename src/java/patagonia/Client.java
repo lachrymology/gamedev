@@ -170,7 +170,6 @@ public class Client {
     
     public void login(String name, String email) {
         try {
-            String msg = "";
             String endpoint = "http://" + this.host + ":" + this.port + "/login?name=" + name + "&email=" + email;
             
             HttpClient httpclient = new DefaultHttpClient();
