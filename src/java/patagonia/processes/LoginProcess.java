@@ -1,19 +1,20 @@
-package patagonia.callbacks;
+package patagonia.processes;
 
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 
 import patagonia.Client;
 import patagonia.Util;
+import patagonia.callbacks.Callback;
 
 
-public class LoginCallback extends Callback {
+public class LoginProcess extends Callback {
 	private String name;
 	private String email;
     private Client client;
 	
-	public LoginCallback(String name, String email, final Client client) {
-		// TODO stringer checks here
+	public LoginProcess(String name, String email, final Client client) {
+		// TODO stronger checks here
 		this.name = name;
 		this.email = email;
         this.client = client;

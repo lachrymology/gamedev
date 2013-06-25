@@ -38,8 +38,8 @@ import org.apache.http.protocol.RequestUserAgent;
 
 import patagonia.callbacks.AttachmentCallback;
 import patagonia.callbacks.Callback;
-import patagonia.callbacks.LoginCallback;
 import patagonia.errors.PatagoniaException;
+import patagonia.processes.LoginProcess;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -175,7 +175,7 @@ public class Client {
             HttpClient httpclient = new DefaultHttpClient();
             HttpPost post = new HttpPost(endpoint);
             HttpResponse resp = httpclient.execute(post);
-            LoginCallback loginProc = new LoginCallback(name, email, this);
+            LoginProcess loginProc = new LoginProcess(name, email, this);
             loginProc.completed(resp);
             
         } catch (Exception e) {
