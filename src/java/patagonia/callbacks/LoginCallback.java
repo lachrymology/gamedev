@@ -1,24 +1,24 @@
 package patagonia.callbacks;
 
-import java.io.InputStream;
 import java.util.Map;
 
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 
+import patagonia.Client;
 import patagonia.Util;
 
 
 public class LoginCallback extends Callback {
 	private String name;
 	private String email;
-    private Map<String, String> credentials;
+    private Client client;
 	
-	public LoginCallback(String name, String email, final Map<String, String> credentials) {
+	public LoginCallback(String name, String email, final Client client) {
 		// TODO stringer checks here
 		this.name = name;
 		this.email = email;
-        this.credentials = credentials;
+        this.client = client;
 	}
 
 	@Override
@@ -27,10 +27,10 @@ public class LoginCallback extends Callback {
 			String[] val = Util.parseCookie(header);
 
 			//TODO stronger checks here
-			this.credentials.put(val[0], val[1]);
+			this.client.addCredential(val[0], val[1]);
 		}
 		
-		this.credentials.put("name",  this.name);
-		this.credentials.put("email", this.email);
+		this.client.addCredential("name",  this.name);
+		this.client.addCredential("email", this.email);
 	}
 }

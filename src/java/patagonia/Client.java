@@ -181,7 +181,7 @@ public class Client {
             
             InputStream body = new ByteArrayInputStream(msg.getBytes());
  
-            this.sendTo(endpoint, "POST", body, new LoginCallback(name, email, this.credentials));
+            this.sendTo(endpoint, "POST", body, new LoginCallback(name, email, this));
         } catch (Exception e) {
             log.severe("Error occurred");
             e.printStackTrace();
@@ -217,5 +217,9 @@ public class Client {
 
 	public void setChannel(UUID uuid) {
 		this.channel = uuid;
+	}
+
+	public synchronized void addCredential(String k, String v) {
+		this.credentials.put(k, v);
 	}
 }
