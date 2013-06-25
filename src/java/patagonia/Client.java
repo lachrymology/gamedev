@@ -183,8 +183,9 @@ public class Client {
             String endpoint = "login?name=" + name + "&email=" + email;
             
             InputStream body = new ByteArrayInputStream(msg.getBytes());
- 
-            this.sendTo(endpoint, "POST", body, new LoginCallback(name, email, this));
+
+            HttpClient httpclient = new DefaultHttpClient();
+            
         } catch (Exception e) {
             log.severe("Error occurred");
             e.printStackTrace();
