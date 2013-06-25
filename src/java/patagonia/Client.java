@@ -1,11 +1,9 @@
 package patagonia;
 
-import org.apache.http.Header;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpRequestInterceptor;
 import org.apache.http.HttpResponse;
 import org.apache.http.concurrent.FutureCallback;
-import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.impl.DefaultConnectionReuseStrategy;
 import org.apache.http.impl.nio.DefaultHttpClientIODispatch;
@@ -36,25 +34,16 @@ import org.apache.http.protocol.RequestUserAgent;
 import patagonia.callbacks.AttachmentCallback;
 import patagonia.callbacks.Callback;
 import patagonia.callbacks.LoginCallback;
-import patagonia.callbacks.NoopCallback;
 import patagonia.errors.PatagoniaException;
 
-import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.InterruptedIOException;
-import java.io.Reader;
-import java.io.StringWriter;
-import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Logger;
-
 
 
 public class Client {
