@@ -3,9 +3,14 @@ package patagonia;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpRequestInterceptor;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.ResponseHandler;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.concurrent.FutureCallback;
 import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.impl.DefaultConnectionReuseStrategy;
+import org.apache.http.impl.client.BasicResponseHandler;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.nio.DefaultHttpClientIODispatch;
 import org.apache.http.impl.nio.pool.BasicNIOConnPool;
 import org.apache.http.impl.nio.reactor.DefaultConnectingIOReactor;
@@ -180,11 +185,13 @@ public class Client {
     public void login(String name, String email) {
         try {
             String msg = "";
-            String endpoint = "login?name=" + name + "&email=" + email;
+            String endpoint = "http://" + this.host + ":" + this.port + "/login?name=" + name + "&email=" + email;
             
-            InputStream body = new ByteArrayInputStream(msg.getBytes());
-
             HttpClient httpclient = new DefaultHttpClient();
+            HttpPost post = new HttpPost(endpoint);
+            HttpResponse resp = httpclient.execute(post);
+            LoginCallback loginProc = new LoginCallback(name, email, this);
+            loginProc.completed(resp);
             
         } catch (Exception e) {
             log.severe("Error occurred");
