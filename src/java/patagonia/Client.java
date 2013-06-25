@@ -38,7 +38,7 @@ import org.apache.http.protocol.RequestUserAgent;
 
 import patagonia.callbacks.Callback;
 import patagonia.errors.PatagoniaException;
-import patagonia.processes.AttachmentCallback;
+import patagonia.processes.AttachmentProcess;
 import patagonia.processes.LoginProcess;
 
 import java.io.ByteArrayInputStream;
@@ -188,7 +188,7 @@ public class Client {
     }
     
     public void attach() {
-		this.sendTo("hi", "GET", this.credentials.get("name"), new AttachmentCallback(this));
+		this.sendTo("hi", "GET", this.credentials.get("name"), new AttachmentProcess(this));
 	}
     
 	public static void main(String[] args) {
