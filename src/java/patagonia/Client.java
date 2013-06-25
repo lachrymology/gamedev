@@ -185,9 +185,6 @@ public class Client {
         }
     }
     
-    public void send(String topic, Map<String,Object>... parameters) {
-    }
-    
     public void attach() {
         try {
             String url = AttachmentProcess.url("http", this.host, this.port);
@@ -203,6 +200,10 @@ public class Client {
             log.severe("Error occurred");
             e.printStackTrace();
         }
+
+    }
+
+    public void send(String topic, Map<String,Object>... parameters) {
 
     }
     
