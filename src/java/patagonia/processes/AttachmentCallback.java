@@ -1,4 +1,4 @@
-package patagonia.callbacks;
+package patagonia.processes;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,6 +9,7 @@ import org.apache.http.HttpResponse;
 
 import patagonia.Client;
 import patagonia.Util;
+import patagonia.callbacks.Callback;
 import patagonia.edn.parser.Parseable;
 import patagonia.edn.parser.Parser;
 import patagonia.edn.parser.Parsers;
