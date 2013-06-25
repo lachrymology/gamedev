@@ -13,8 +13,8 @@ public class LoginProcess extends Callback {
 	private String email;
     private Client client;
     
-    public static String url(String proto, String host, int port, String endpoint) {
-    	return proto + "://" + host + ":" + port + "/" + endpoint;
+    public static String url(String proto, String host, int port, String name, String email) {
+    	return proto + "://" + host + ":" + port + "/" + "login?name=" + name + "&email=" + email;
     }
 	
 	public LoginProcess(String name, String email, final Client client) {

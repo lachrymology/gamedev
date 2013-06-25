@@ -5,6 +5,7 @@ import org.apache.http.HttpRequestInterceptor;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.ResponseHandler;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.concurrent.FutureCallback;
 import org.apache.http.entity.InputStreamEntity;
@@ -170,7 +171,7 @@ public class Client {
     
     public void login(String name, String email) {
         try {
-            String url = LoginProcess.url("http", this.host, this.port, "login?name=" + name + "&email=" + email);
+            String url = LoginProcess.url("http", this.host, this.port, name, email);
             
             HttpClient httpclient = new DefaultHttpClient();
             HttpPost post = new HttpPost(url);
@@ -188,8 +189,22 @@ public class Client {
     }
     
     public void attach() {
-		this.sendTo("hi", "GET", this.credentials.get("name"), new AttachmentProcess(this));
-	}
+		//this.sendTo("hi", "GET", this.credentials.get("name"), new AttachmentProcess(this));
+        try {
+            String url = AttachmentProcess.url("http", this.host, this.port);
+            
+            HttpClient httpclient = new DefaultHttpClient();
+            HttpGet get = new HttpGet(url);
+            HttpResponse resp = httpclient.execute(get);
+            AttachmentProcess attachProc = new AttachmentProcess(this);
+            attachProc.completed(resp);
+            
+        } catch (Exception e) {
+            log.severe("Error occurred");
+            e.printStackTrace();
+        }
+
+    }
     
 	public static void main(String[] args) {
 		Client client = new Client("localhost", 8080, "/");
