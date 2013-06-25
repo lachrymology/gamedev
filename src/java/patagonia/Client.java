@@ -195,6 +195,7 @@ public class Client {
             
             HttpClient httpclient = new DefaultHttpClient();
             HttpGet get = new HttpGet(url);
+            Util.cookieDecoration(this.credentials, get);
             HttpResponse resp = httpclient.execute(get);
             AttachmentProcess attachProc = new AttachmentProcess(this);
             attachProc.completed(resp);
