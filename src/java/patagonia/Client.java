@@ -163,6 +163,20 @@ public class Client {
     	ioReactor.shutdown();
     }
     
+    public void login(String name, String email, Callback cb) {
+        try {
+            String msg = "";
+            String endpoint = "login?name=" + name + "&email=" + email;
+            
+            InputStream body = new ByteArrayInputStream(msg.getBytes());
+ 
+            this.sendTo(endpoint, "POST", body, new LoginCallback(name, email, this));
+        } catch (Exception e) {
+            log.severe("Error occurred");
+            e.printStackTrace();
+        }
+    }
+    
     public void login(String name, String email) {
         try {
             String msg = "";
@@ -176,6 +190,7 @@ public class Client {
             e.printStackTrace();
         }
     }
+   
     
     public void send(String topic, Map<String,Object>... parameters) {
     }
