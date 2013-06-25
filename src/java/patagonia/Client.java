@@ -189,7 +189,6 @@ public class Client {
     }
     
     public void attach() {
-		//this.sendTo("hi", "GET", this.credentials.get("name"), new AttachmentProcess(this));
         try {
             String url = AttachmentProcess.url("http", this.host, this.port);
             
@@ -216,13 +215,6 @@ public class Client {
 		}
         
         client.login("fogus", "mfogus@d-a-s.com");
-        
-        try {
-			Thread.sleep(5000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-        
         client.attach();
 	}
 
