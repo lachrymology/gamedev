@@ -12,6 +12,7 @@ import org.apache.http.Header;
 import org.apache.http.HttpRequest;
 
 import patagonia.edn.Keyword;
+import patagonia.edn.Symbol;
 
 public class Util {
 	public static String slurp(InputStream in) throws IOException {
@@ -48,12 +49,22 @@ public class Util {
 	public static Keyword kw(String str) {
 		return Keyword.newKeyword(str);
 	}
+
+	public static Symbol sym(String str) {
+		return Symbol.newSymbol(str);
+	}
 	
 	@SuppressWarnings("serial")
 	public static HashMap<Keyword, Object> buildMessagePacket(final UUID channel, final Map<String, String> credentials) {
+		final HashMap<Keyword,Object> address = new HashMap<Keyword,Object>() {{
+			put(kw("type"), sym("patagonia.sys.global-messaging"));
+			put(kw("object"), channel);
+		}};
+		
 		return new HashMap<Keyword,Object>() {{
 			put(kw("version"), "0.1");
 			put(kw("tag"), kw("push"));
+			put(kw("to"), address);
 			put(kw("context-id"), channel);
 			put(kw("session-id"), UUID.fromString(credentials.get("session-id")));
 		}};
