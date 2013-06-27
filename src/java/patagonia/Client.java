@@ -143,7 +143,7 @@ public class Client {
     	
         final HttpHost target = new HttpHost(host, port, "http");   //
         
-        BasicHttpEntityEnclosingRequest request = new BasicHttpEntityEnclosingRequest(method, path + endpoint);
+        BasicHttpEntityEnclosingRequest request = new BasicHttpEntityEnclosingRequest(method, this.path + endpoint);
         request.setEntity(new InputStreamEntity(inputStream, -1));
         Util.cookieDecoration(this.credentials, request);
         
@@ -214,7 +214,7 @@ public class Client {
     	
     	packet.put(topic, messages);
     	
-    	say("/async", "POST", Printers.printString(packet), new NoopCallback());
+    	say("async", "POST", Printers.printString(packet), new NoopCallback());
     }
     
 	public static void main(String[] args) {
