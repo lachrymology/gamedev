@@ -4,7 +4,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import org.apache.http.Header;
 import org.apache.http.HttpRequest;
@@ -39,5 +41,12 @@ public class Util {
         	String cook = Util.pickleCookies(credentials);
         	request.setHeader("Cookie", cook);
         }
+	}
+
+	@SuppressWarnings("serial")
+	public static HashMap<String, Object> buildMessagePacket(UUID channel, Map<String, String> credentials) {
+		return new HashMap<String,Object>() {{
+			put("version", "0.1");
+		}};
 	} 
 }

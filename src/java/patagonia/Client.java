@@ -204,12 +204,12 @@ public class Client {
     }
     
     public void send(String top, Map<String,Object>... parameters) {
-    	Keyword topic = Keyword.newKeyword(top);
-    	String stuff = Printers.printString(top);
+    	String topic = Printers.printString(Keyword.newKeyword(top));
+    	Map<String,Object> packet = Util.buildMessagePacket(this.channel, this.credentials);
     	
+    	packet.put(topic, "foo");
     	
-    	
-    	System.out.println("---> " + stuff);
+    	System.out.println("---> " + Printers.printString(packet));
     }
     
 	public static void main(String[] args) {
