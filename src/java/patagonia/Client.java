@@ -215,6 +215,12 @@ public class Client {
         
         client.login("fogus", "mfogus@d-a-s.com");
         client.attach();
+        
+        client.sendTestMessages();
+	}
+
+	private void sendTestMessages() {
+		
 	}
 
 	public void setChannel(UUID uuid) {
