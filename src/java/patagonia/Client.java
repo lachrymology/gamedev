@@ -36,6 +36,7 @@ import org.apache.http.protocol.RequestTargetHost;
 import org.apache.http.protocol.RequestUserAgent;
 
 import patagonia.callbacks.Callback;
+import patagonia.callbacks.NoopCallback;
 import patagonia.edn.Keyword;
 import patagonia.edn.printer.Printers;
 import patagonia.errors.PatagoniaException;
@@ -46,7 +47,10 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InterruptedIOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Logger;
@@ -206,10 +210,11 @@ public class Client {
     public void send(String top, Map<String,Object>... parameters) {
     	Keyword topic = Keyword.newKeyword(top);
     	Map<Keyword,Object> packet = Util.buildMessagePacket(this.channel, this.credentials);
+    	List<Map<String,Object>> messages = new ArrayList<Map<String,Object>>(Arrays.asList(parameters));
     	
-    	packet.put(topic, "foo");
+    	packet.put(topic, messages);
     	
-    	System.out.println("---> " + Printers.printString(packet));
+    	say("/async", "POST", Printers.printString(packet), new NoopCallback());
     }
     
 	public static void main(String[] args) {
