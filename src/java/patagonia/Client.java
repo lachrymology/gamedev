@@ -202,7 +202,6 @@ public class Client {
     }
 
     public void send(String topic, Map<String,Object>... parameters) {
-
     }
     
 	public static void main(String[] args) {
@@ -216,10 +215,22 @@ public class Client {
         client.login("fogus", "mfogus@d-a-s.com");
         client.attach();
         
-        client.sendTestMessages();
+        client.sendTestMessages(client);
 	}
 
-	private void sendTestMessages() {
+	@SuppressWarnings({ "unchecked", "serial" })
+	private void sendTestMessages(Client client) {
+    	client.send("dsr/capabilities",
+  			  new HashMap<String,Object>() {{
+  			      put("provider/id", "test-service");
+  			      put("provider/peer", "http://localhost:8081");
+  			      put("provider/descr", "Foo bar baz.");
+  			  }},
+  			  new HashMap<String,Object>() {{
+  			      put("capability/name", "test");
+  			      put("capability/provided", Boolean.TRUE);
+  			      put("capability/provider", "test-service");
+  			  }});
 		
 	}
 
