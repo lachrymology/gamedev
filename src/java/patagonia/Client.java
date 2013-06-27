@@ -36,6 +36,8 @@ import org.apache.http.protocol.RequestTargetHost;
 import org.apache.http.protocol.RequestUserAgent;
 
 import patagonia.callbacks.Callback;
+import patagonia.edn.Keyword;
+import patagonia.edn.printer.Printers;
 import patagonia.errors.PatagoniaException;
 import patagonia.processes.AttachmentProcess;
 import patagonia.processes.LoginProcess;
@@ -201,8 +203,13 @@ public class Client {
     	sendTo(endpoint, method, new ByteArrayInputStream(message.getBytes()), callBack);
     }
     
-    public void send(String topic, Map<String,Object>... parameters) {
+    public void send(String top, Map<String,Object>... parameters) {
+    	Keyword topic = Keyword.newKeyword(top);
+    	String stuff = Printers.printString(top);
     	
+    	
+    	
+    	System.out.println("---> " + stuff);
     }
     
 	public static void main(String[] args) {
