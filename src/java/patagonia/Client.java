@@ -235,7 +235,7 @@ public class Client {
 	private void sendTestMessages(Client client) {
     	client.send("dsr/capabilities",
   			  new HashMap<String,Object>() {{
-  			      put("provider/id", "test-service");
+  			      put("provider/id", 42);
   			      put("provider/peer", "http://localhost:8081");
   			      put("provider/descr", "Foo bar baz.");
   			  }},
