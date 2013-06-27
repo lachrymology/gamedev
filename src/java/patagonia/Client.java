@@ -159,10 +159,6 @@ public class Client {
                 });
     }
 
-    private void sendTo(String endpoint, String method, String message, final Callback callBack) {
-    	sendTo(endpoint, method, new ByteArrayInputStream(message.getBytes()), callBack);
-    }
-    
     public void destroy() throws IOException {
     	ioReactor.shutdown();
     }
@@ -201,7 +197,12 @@ public class Client {
 
     }
 
+    private void say(String endpoint, String method, String message, final Callback callBack) {
+    	sendTo(endpoint, method, new ByteArrayInputStream(message.getBytes()), callBack);
+    }
+    
     public void send(String topic, Map<String,Object>... parameters) {
+    	
     }
     
 	public static void main(String[] args) {
