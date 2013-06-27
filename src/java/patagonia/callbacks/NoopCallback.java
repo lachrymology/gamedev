@@ -22,7 +22,9 @@ public class NoopCallback extends Callback {
 	public void completed(HttpResponse response) {
 		try {
 			this.completed(response.getEntity().getContent());
-		} catch (IllegalStateException | IOException e) {
+		} catch (IllegalStateException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
