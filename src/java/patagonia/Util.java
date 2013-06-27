@@ -50,9 +50,12 @@ public class Util {
 	}
 	
 	@SuppressWarnings("serial")
-	public static HashMap<Keyword, Object> buildMessagePacket(UUID channel, Map<String, String> credentials) {
+	public static HashMap<Keyword, Object> buildMessagePacket(final UUID channel, final Map<String, String> credentials) {
 		return new HashMap<Keyword,Object>() {{
 			put(kw("version"), "0.1");
+			put(kw("tag"), kw("push"));
+			put(kw("context-id"), channel);
+			put(kw("session-id"), UUID.fromString(credentials.get("session-id")));
 		}};
 	} 
 }
