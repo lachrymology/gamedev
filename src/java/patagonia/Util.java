@@ -11,6 +11,8 @@ import java.util.UUID;
 import org.apache.http.Header;
 import org.apache.http.HttpRequest;
 
+import patagonia.edn.Keyword;
+
 public class Util {
 	public static String slurp(InputStream in) throws IOException {
     	InputStreamReader is = new InputStreamReader(in);
@@ -43,10 +45,14 @@ public class Util {
         }
 	}
 
+	public static Keyword kw(String str) {
+		return Keyword.newKeyword(str);
+	}
+	
 	@SuppressWarnings("serial")
-	public static HashMap<String, Object> buildMessagePacket(UUID channel, Map<String, String> credentials) {
-		return new HashMap<String,Object>() {{
-			put("version", "0.1");
+	public static HashMap<Keyword, Object> buildMessagePacket(UUID channel, Map<String, String> credentials) {
+		return new HashMap<Keyword,Object>() {{
+			put(kw("version"), "0.1");
 		}};
 	} 
 }

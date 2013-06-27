@@ -204,8 +204,8 @@ public class Client {
     }
     
     public void send(String top, Map<String,Object>... parameters) {
-    	String topic = Printers.printString(Keyword.newKeyword(top));
-    	Map<String,Object> packet = Util.buildMessagePacket(this.channel, this.credentials);
+    	Keyword topic = Keyword.newKeyword(top);
+    	Map<Keyword,Object> packet = Util.buildMessagePacket(this.channel, this.credentials);
     	
     	packet.put(topic, "foo");
     	
