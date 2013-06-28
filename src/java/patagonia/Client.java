@@ -56,13 +56,17 @@ import java.util.UUID;
 import java.util.logging.Logger;
 
 
-public class Client {
+public class Client implements IClient {
 	private static Logger log = Logger.getLogger(Client.class.toString());
 	
 	private String host;
 	private int port;
 	private String path;
 	private volatile Map<String,String> credentials = new HashMap<String,String>();
+	public Map<String, String> getCredentials() {
+		return credentials;
+	}
+
 	private volatile UUID channel;
 	
 	private ConnectingIOReactor ioReactor;
@@ -229,11 +233,14 @@ public class Client {
         client.attach();
         
         client.sendTestMessages(client);
+        
+        LongPollClient lp = new LongPollClient("localhost", 8080, "/", client.getCredentials());
+        lp.listen("", new NoopCallback());
 	}
 
 	@SuppressWarnings({ "unchecked", "serial" })
 	private void sendTestMessages(Client client) {
-    	client.send("dsr/capabilities",
+		client.send("dsr/capabilities",
   			  new HashMap<String,Object>() {{
   			      put("provider/id", 42);
   			      put("provider/peer", "http://localhost:8081");

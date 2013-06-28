@@ -1,5 +1,6 @@
 package patagonia;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InterruptedIOException;
@@ -11,9 +12,12 @@ import java.util.logging.Logger;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpRequestInterceptor;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.concurrent.FutureCallback;
 import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.impl.DefaultConnectionReuseStrategy;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.nio.DefaultHttpClientIODispatch;
 import org.apache.http.impl.nio.pool.BasicNIOConnPool;
 import org.apache.http.impl.nio.reactor.DefaultConnectingIOReactor;
@@ -41,8 +45,9 @@ import org.apache.http.protocol.RequestUserAgent;
 
 import patagonia.callbacks.Callback;
 import patagonia.errors.PatagoniaException;
+import patagonia.processes.AttachmentProcess;
 
-public class LongPollClient {
+public class LongPollClient implements IClient {
 	private static Logger log = Logger.getLogger(LongPollClient.class.toString());
 	
 	private String host;
@@ -56,7 +61,7 @@ public class LongPollClient {
     private HttpParams params;
     private BasicNIOConnPool pool;
 	
-    public LongPollClient(String host, int port, String path) {
+    public LongPollClient(String host, int port, String path, Map<String, String> credentials2) {
         this.host = host;
         this.port = port;
         this.path = path;
@@ -152,5 +157,33 @@ public class LongPollClient {
     }
     
     
+    
+    public void listen(String message, Callback callback) {
+    	attach();
+    	//listen("long_poll", "POST", new ByteArrayInputStream(message.getBytes()), callback);
+    }
 
+	private void attach() {
+		try {
+	        String url = "http" + this.host + this.port + "/context/new/dsr";
+	        
+	        HttpClient httpclient = new DefaultHttpClient();
+	        HttpGet get = new HttpGet(url);
+	        Util.cookieDecoration(this.credentials, get);
+	        HttpResponse resp = httpclient.execute(get);
+	        AttachmentProcess attachProc = new AttachmentProcess(this);
+	        attachProc.completed(resp);
+	        
+	    } catch (Exception e) {
+	        log.severe("Error occurred");
+	        e.printStackTrace();
+	    }		
+	}
+
+	@Override
+	public void setChannel(UUID uuid) {
+		this.channel = uuid;
+	}
+
+    
 }
