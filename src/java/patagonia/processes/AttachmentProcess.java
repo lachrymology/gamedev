@@ -7,7 +7,6 @@ import java.util.UUID;
 
 import org.apache.http.HttpResponse;
 
-import patagonia.Client;
 import patagonia.IClient;
 import patagonia.Util;
 import patagonia.callbacks.Callback;
