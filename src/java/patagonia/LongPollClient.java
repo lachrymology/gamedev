@@ -14,8 +14,10 @@ import org.apache.http.HttpRequestInterceptor;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.concurrent.FutureCallback;
 import org.apache.http.entity.InputStreamEntity;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.DefaultConnectionReuseStrategy;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.nio.DefaultHttpClientIODispatch;
@@ -61,10 +63,11 @@ public class LongPollClient implements IClient {
     private HttpParams params;
     private BasicNIOConnPool pool;
 	
-    public LongPollClient(String host, int port, String path, Map<String, String> credentials2) {
+    public LongPollClient(String host, int port, String path, Map<String, String> credentials) {
         this.host = host;
         this.port = port;
         this.path = path;
+        this.credentials = credentials;
     }
     
     private void initParams() {
@@ -165,12 +168,13 @@ public class LongPollClient implements IClient {
 
 	private void attach() {
 		try {
-	        String url = "http" + this.host + this.port + "/context/new/dsr";
+	        String url = "http://" + this.host + ":" + this.port + "/context/new/nga";
 	        
 	        HttpClient httpclient = new DefaultHttpClient();
-	        HttpGet get = new HttpGet(url);
-	        Util.cookieDecoration(this.credentials, get);
-	        HttpResponse resp = httpclient.execute(get);
+	        HttpPost post = new HttpPost(url);
+	        Util.cookieDecoration(this.credentials, post);
+	        post.setEntity(new StringEntity("{}"));
+	        HttpResponse resp = httpclient.execute(post);
 	        AttachmentProcess attachProc = new AttachmentProcess(this);
 	        attachProc.completed(resp);
 	        

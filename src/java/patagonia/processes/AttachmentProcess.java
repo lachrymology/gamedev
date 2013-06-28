@@ -27,9 +27,15 @@ public class AttachmentProcess extends Callback {
     		String str = Util.slurp(inputStream);
 			Parseable pbr = Parsers.newParseable(str);
 			Parser p = Parsers.newParser(Parsers.defaultConfiguration());
-			List uuids = (List) p.nextValue(pbr);
+			Object uuids = p.nextValue(pbr);
 			
-			this.client.setChannel((UUID) uuids.get(0));
+			if (uuids instanceof List)
+				this.client.setChannel((UUID) ((List)uuids).get(0));
+			else if (uuids instanceof UUID)
+				this.client.setChannel((UUID) uuids);
+			else
+				throw new RuntimeException("Could not attach!");
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

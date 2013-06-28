@@ -63,6 +63,7 @@ public class Client implements IClient {
 	private int port;
 	private String path;
 	private volatile Map<String,String> credentials = new HashMap<String,String>();
+	
 	public Map<String, String> getCredentials() {
 		return credentials;
 	}
