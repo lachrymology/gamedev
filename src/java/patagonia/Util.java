@@ -68,5 +68,21 @@ public class Util {
 			put(kw("context-id"), channel);
 			put(kw("session-id"), UUID.fromString(credentials.get("session-id")));
 		}};
+	}
+
+	@SuppressWarnings("serial")
+	public static Map<Keyword, Object> buildContextPacket(final UUID channel, final Map<String, String> credentials) {
+		final HashMap<Keyword,Object> address = new HashMap<Keyword,Object>() {{
+			put(kw("type"), sym("patagonia.sys.context"));
+			put(kw("object"), channel);
+		}};
+		
+		return new HashMap<Keyword,Object>() {{
+			put(kw("version"), "0.1");
+			put(kw("to"), address);
+			put(kw("context-id"), channel);
+			put(kw("session-id"), UUID.fromString(credentials.get("session-id")));
+			put(kw("tag"), kw("long-poll"));
+		}};
 	} 
 }

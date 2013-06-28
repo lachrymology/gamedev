@@ -4,7 +4,10 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InterruptedIOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Logger;
@@ -46,6 +49,8 @@ import org.apache.http.protocol.RequestTargetHost;
 import org.apache.http.protocol.RequestUserAgent;
 
 import patagonia.callbacks.Callback;
+import patagonia.edn.Keyword;
+import patagonia.edn.printer.Printers;
 import patagonia.errors.PatagoniaException;
 import patagonia.processes.AttachmentProcess;
 
@@ -68,6 +73,11 @@ public class LongPollClient implements IClient {
         this.port = port;
         this.path = path;
         this.credentials = credentials;
+        try {
+			this.init();
+		} catch (PatagoniaException e) {
+			e.printStackTrace();
+		}
     }
     
     private void initParams() {
@@ -161,9 +171,13 @@ public class LongPollClient implements IClient {
     
     
     
-    public void listen(String message, Callback callback) {
+    public void listen(Callback callback) {
     	attach();
-    	//listen("long_poll", "POST", new ByteArrayInputStream(message.getBytes()), callback);
+    	
+    	Map<Keyword,Object> packet = Util.buildContextPacket(this.channel, this.credentials);
+    	String message = Printers.printString(packet);
+    	
+    	listen("long_poll", "POST", new ByteArrayInputStream(message.getBytes()), callback);
     }
 
 	private void attach() {
