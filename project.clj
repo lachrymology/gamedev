@@ -1,4 +1,4 @@
-(defproject patagonia/java.client "0.0.1"
+(defproject patagonia/java.client "0.4.0"
   :description "Nothing of note."
   :dependencies [[org.apache.httpcomponents/httpcore "4.2.4"]
                  [org.apache.httpcomponents/httpcore-nio "4.2.4"]
