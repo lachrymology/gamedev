@@ -6,5 +6,6 @@
                  [commons-logging/commons-logging "1.1.3"]]
   :java-source-paths ["src/java"]
   :javac-options ["-target" "1.6" "-source" "1.6" "-Xlint:-options"]
-  :omit-source true)
+  :omit-source true
+  :jar-exclusions [#"(?:^|/).svn/"])
 
