@@ -74,6 +74,7 @@ public class Client implements IClient {
     private HttpProcessor httpproc;
     private HttpParams params;
     private BasicNIOConnPool pool;
+    private LongPollClient longpoll;
 	
     public Client(String host, int port, String path) {
         this.host = host;
@@ -190,7 +191,13 @@ public class Client implements IClient {
         }
     }
     
-    public void attach() {
+    private void listen(Callback callback) {
+        this.longpoll = new LongPollClient("localhost", 8080, "/", this.credentials);
+        longpoll.attach();
+        longpoll.listen(callback);
+    }
+    
+    public void attach(Callback callback) {
         try {
             String url = AttachmentProcess.url("http", this.host, this.port);
             
@@ -201,11 +208,12 @@ public class Client implements IClient {
             AttachmentProcess attachProc = new AttachmentProcess(this);
             attachProc.completed(resp);
             
+            listen(callback);
+            
         } catch (Exception e) {
             log.severe("Error occurred");
             e.printStackTrace();
         }
-
     }
 
     private void say(String endpoint, String method, String message, final Callback callBack) {
@@ -231,13 +239,9 @@ public class Client implements IClient {
 		}
         
         client.login("fogus", "mfogus@d-a-s.com");
-        client.attach();
+        client.attach(new NoopCallback());
         
         client.sendTestMessages(client);
-        
-        LongPollClient lp = new LongPollClient("localhost", 8080, "/", client.getCredentials());
-        lp.attach();
-        lp.listen(new NoopCallback());
 	}
 
 	@SuppressWarnings({ "unchecked", "serial" })
