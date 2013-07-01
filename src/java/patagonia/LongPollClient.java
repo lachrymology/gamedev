@@ -158,6 +158,8 @@ public class LongPollClient implements IClient {
                 new BasicHttpContext(),
                 new FutureCallback<HttpResponse>() {
                     public void completed(final HttpResponse response) {
+                    	// TODO reconnect
+                    	
                     	callBack.completed(response);
                     }
                     public void failed(final Exception ex) {
@@ -170,17 +172,14 @@ public class LongPollClient implements IClient {
     }
     
     
-    
     public void listen(Callback callback) {
-    	attach();
-    	
     	Map<Keyword,Object> packet = Util.buildContextPacket(this.channel, this.credentials);
     	String message = Printers.printString(packet);
     	
     	listen("long_poll", "POST", new ByteArrayInputStream(message.getBytes()), callback);
     }
 
-	private void attach() {
+	public void attach() {
 		try {
 	        String url = "http://" + this.host + ":" + this.port + "/context/new/nga";
 	        

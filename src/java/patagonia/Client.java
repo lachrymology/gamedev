@@ -236,6 +236,7 @@ public class Client implements IClient {
         client.sendTestMessages(client);
         
         LongPollClient lp = new LongPollClient("localhost", 8080, "/", client.getCredentials());
+        lp.attach();
         lp.listen(new NoopCallback());
 	}
 
