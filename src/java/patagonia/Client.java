@@ -70,6 +70,10 @@ public class Client implements IClient {
 
 	private volatile UUID channel;
 	
+	public UUID getChannel() {
+		return channel;
+	}
+
 	private ConnectingIOReactor ioReactor;
     private HttpProcessor httpproc;
     private HttpParams params;
