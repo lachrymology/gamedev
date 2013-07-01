@@ -168,16 +168,16 @@ public class LongPollClient implements IClient {
     }
     
     
-    public void listen(Callback callback) {
+    private void listen(Callback callback) {
     	Map<Keyword,Object> packet = Util.buildContextPacket(this.channel, this.credentials);
     	String message = Printers.printString(packet);
     	
     	listen("long_poll", "POST", new ByteArrayInputStream(message.getBytes()), callback);
     }
 
-	public void attach() {
+	public void attach(String context, Callback callback) {
 		try {
-	        String url = "http://" + this.host + ":" + this.port + "/context/new/nga";
+	        String url = "http://" + this.host + ":" + this.port + "/context/new/" + context;
 	        
 	        HttpClient httpclient = new DefaultHttpClient();
 	        HttpPost post = new HttpPost(url);
@@ -186,6 +186,8 @@ public class LongPollClient implements IClient {
 	        HttpResponse resp = httpclient.execute(post);
 	        AttachmentProcess attachProc = new AttachmentProcess(this);
 	        attachProc.completed(resp);
+	        
+	        listen(callback);
 	        
 	    } catch (Exception e) {
 	        log.severe("Error occurred");

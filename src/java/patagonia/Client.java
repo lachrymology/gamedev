@@ -193,10 +193,9 @@ public class Client implements IClient {
         }
     }
     
-    private void listen(Callback callback) {
+    private void listen(String context, Callback callback) {
         this.longpoll = new LongPollClient("localhost", 8080, "/", this.credentials);
-        longpoll.attach();
-        longpoll.listen(callback);
+        longpoll.attach(context, callback);
     }
     
     public void attach(String context, Callback callback) {
@@ -211,7 +210,7 @@ public class Client implements IClient {
             AttachmentProcess attachProc = new AttachmentProcess(this);
             attachProc.completed(resp);
             
-            listen(callback);
+            listen(this.context, callback);
             
         } catch (Exception e) {
             log.severe("Error occurred");
@@ -242,7 +241,7 @@ public class Client implements IClient {
 		}
         
         client.login("fogus", "mfogus@d-a-s.com");
-        client.attach("dsr", new NoopCallback());
+        client.attach("nga", new NoopCallback());
         
         client.sendTestMessages(client);
 	}
