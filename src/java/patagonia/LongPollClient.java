@@ -158,7 +158,7 @@ public class LongPollClient implements IClient {
                 new BasicHttpContext(),
                 new FutureCallback<HttpResponse>() {
                     public void completed(final HttpResponse response) {
-                    	// TODO reconnect
+                    	listen(callBack);
                     	
                     	callBack.completed(response);
                     }
