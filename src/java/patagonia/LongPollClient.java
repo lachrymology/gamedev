@@ -78,7 +78,7 @@ public class LongPollClient implements IClient {
     
     private void initParams() {
         this.params = new SyncBasicHttpParams();
-        this.params.setIntParameter(CoreConnectionPNames.SO_TIMEOUT, 30000)
+        this.params.setIntParameter(CoreConnectionPNames.SO_TIMEOUT, 3000000)
                 .setIntParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, 30000)
                 .setIntParameter(CoreConnectionPNames.SOCKET_BUFFER_SIZE, 8 * 1024)
                 .setBooleanParameter(CoreConnectionPNames.TCP_NODELAY, true)
