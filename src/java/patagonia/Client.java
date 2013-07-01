@@ -75,6 +75,8 @@ public class Client implements IClient {
     private HttpParams params;
     private BasicNIOConnPool pool;
     private LongPollClient longpoll;
+
+	private String context;
 	
     public Client(String host, int port, String path) {
         this.host = host;
@@ -197,8 +199,9 @@ public class Client implements IClient {
         longpoll.listen(callback);
     }
     
-    public void attach(Callback callback) {
+    public void attach(String context, Callback callback) {
         try {
+        	this.context = context;
             String url = AttachmentProcess.url("http", this.host, this.port);
             
             HttpClient httpclient = new DefaultHttpClient();
@@ -239,7 +242,7 @@ public class Client implements IClient {
 		}
         
         client.login("fogus", "mfogus@d-a-s.com");
-        client.attach(new NoopCallback());
+        client.attach("dsr", new NoopCallback());
         
         client.sendTestMessages(client);
 	}
