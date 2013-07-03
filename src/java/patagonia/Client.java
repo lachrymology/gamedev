@@ -235,6 +235,20 @@ public class Client implements IClient {
     	
     	say("async", "POST", Printers.printString(packet), new NoopCallback());
     }
+
+    public void send(String top, UUID trace, Map<String,Object>... parameters) {
+    	Keyword topic = Keyword.newKeyword(top);
+    	Map<Keyword,Object> packet = Util.buildMessagePacket(this.channel, this.credentials);
+    	List<Map<String,Object>> messages = new ArrayList<Map<String,Object>>(Arrays.asList(parameters));
+    	
+    	packet.put(topic, messages);
+    	
+    	if (trace != null) {
+    		packet.put(Util.kw("patagonia/trace"), trace);
+    	}
+    	
+    	say("async", "POST", Printers.printString(packet), new NoopCallback());
+    }
     
 	public static void main(String[] args) {
 		Client client = new Client("localhost", 8080, "/");

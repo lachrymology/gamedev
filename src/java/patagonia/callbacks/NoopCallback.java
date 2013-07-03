@@ -21,7 +21,9 @@ public class NoopCallback extends Callback {
 	@Override
 	public void completed(HttpResponse response) {
 		try {
-			this.completed(response.getEntity().getContent());
+			if (response != null && response.getEntity() != null) {
+				this.completed(response.getEntity().getContent());
+			}
 		} catch (IllegalStateException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -30,7 +32,8 @@ public class NoopCallback extends Callback {
 	}
 	
 	public void failed(Exception e) {
-		System.out.println("Failed to send the message");
+		System.out.println("NOOP, failed to send the message: " + e.getMessage());
+		e.printStackTrace();
     }
  
 	public void cancelled() {
