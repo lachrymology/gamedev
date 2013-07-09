@@ -172,7 +172,7 @@ public class LongPollClient implements IClient {
     	Map<Keyword,Object> packet = Util.buildContextPacket(this.channel, this.credentials);
     	String message = Printers.printString(packet);
     	
-    	listen("long_poll", "POST", new ByteArrayInputStream(message.getBytes()), callback);
+    	listen("source", "POST", new ByteArrayInputStream(message.getBytes()), callback);
     }
 
 	public void attach(String context, Callback callback) {

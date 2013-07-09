@@ -233,7 +233,7 @@ public class Client implements IClient {
     	
     	packet.put(topic, messages);
     	
-    	say("async", "POST", Printers.printString(packet), new NoopCallback());
+    	say("sink", "POST", Printers.printString(packet), new NoopCallback());
     }
 
     public void send(String top, UUID trace, Map<String,Object>... parameters) {
@@ -247,7 +247,7 @@ public class Client implements IClient {
     		packet.put(Util.kw("patagonia/trace"), trace);
     	}
     	
-    	say("async", "POST", Printers.printString(packet), new NoopCallback());
+    	say("sink", "POST", Printers.printString(packet), new NoopCallback());
     }
     
 	public static void main(String[] args) {
