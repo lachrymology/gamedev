@@ -198,7 +198,7 @@ public class Client implements IClient {
     }
     
     private void listen(String context, Callback callback) {
-        this.longpoll = new LongPollClient("localhost", this.port, "/", this.credentials);
+        this.longpoll = new LongPollClient(this.host, this.port, "/", this.credentials);
         longpoll.attach(context, callback);
     }
     
