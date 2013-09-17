@@ -3,9 +3,9 @@ package patagonia.callbacks;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.apache.http.HttpResponse;
 
 import patagonia.Util;
+import patagonia.http.HttpResponse;
 
 
 public class NoopCallback extends Callback {

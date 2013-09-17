@@ -1,11 +1,11 @@
 package patagonia.processes;
 
-import org.apache.http.Header;
-import org.apache.http.HttpResponse;
 
 import patagonia.Client;
 import patagonia.Util;
 import patagonia.callbacks.Callback;
+import patagonia.http.Header;
+import patagonia.http.HttpResponse;
 
 
 public class LoginProcess extends Callback {

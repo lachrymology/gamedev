@@ -8,11 +8,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import org.apache.http.Header;
-import org.apache.http.HttpRequest;
 
 import patagonia.edn.Keyword;
 import patagonia.edn.Symbol;
+import patagonia.http.Header;
+import patagonia.http.HttpRequest;
 
 public class Util {
 	public static String slurp(InputStream in) throws IOException {

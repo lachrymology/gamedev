@@ -2,7 +2,7 @@ package patagonia.callbacks;
 
 import java.io.InputStream;
 
-import org.apache.http.HttpResponse;
+import patagonia.http.HttpResponse;
 
 public abstract class Callback {
     public void completed(InputStream inputStream) {

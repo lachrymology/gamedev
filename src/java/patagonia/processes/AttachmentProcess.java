@@ -5,7 +5,6 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.UUID;
 
-import org.apache.http.HttpResponse;
 
 import patagonia.IClient;
 import patagonia.Util;
@@ -13,6 +12,7 @@ import patagonia.callbacks.Callback;
 import patagonia.edn.parser.Parseable;
 import patagonia.edn.parser.Parser;
 import patagonia.edn.parser.Parsers;
+import patagonia.http.HttpResponse;
 
 public class AttachmentProcess extends Callback {
     private IClient client;
